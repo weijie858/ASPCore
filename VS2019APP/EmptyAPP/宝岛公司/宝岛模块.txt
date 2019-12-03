@@ -2,8 +2,141 @@
 镜客商品维护A
 tb_material_maintenance_apply_head
 tb_material_maintenance_apply_detail_add
+tb_purchase_vendor_material  ---采购组供应商商品表
+tb_purchase_wholesale_price  ---采购组批发价表
+tb_sale_dep_sale_price   ---销售组售价表
 
 //假设审批是最后一级，则插入商品到 ： 采购组供应商商品表，销售组售价表，采购组批发价表
 采购组供应商商品表   tb_purchase_vendor_material  tb_purchase_vendor_price_bc（B、C类）
 tb_strategy_price 价格策略
 
+
+SELECT * FROM tb_jk_head_brand
+SELECT * FROM tb_jk_headquarters_set
+----------------------------------------------------
+        /// <summary>
+        /// 查询供应商商品_列表
+        /// </summary>
+        /// <param name="materialId">模糊查询：商品编号含有该值即显示结果</param>
+        /// <param name="materialDes">模糊查询：星创商品描述含有该值即显示结果</param>
+        /// <param name="vendorMaterialId">模糊查询：供应商商品编号含有该值即显示结果</param>
+        /// <param name="icd">模糊查询：国际码含有该值即显示结果</param>
+        /// <param name="materialName">模糊查询：产品名称含有该值即显示结果</param>
+        /// <param name="brand">品牌代码/名称</param>
+        /// <param name="classId">模糊查询：品类含有该值即显示结果</param>
+        /// <param name="texture">材质</param>
+        /// <param name="vendorId">模糊查询：供应商含有该值即显示结果</param>
+        /// <param name="degreeS"></param>
+        /// <param name="degreeC"></param>
+        /// <param name="ax"></param>
+        /// <returns>查询结果，可用于分页的星创商品列表</returns>
+        public IQueryable<CMaterialQueryModel> QueryToExportBySql(string vendorId, string materialId, string materialDes, string vendorMaterialId, string icd, string materialName, string brand, string classId, string texture, string degreeS, string degreeC, int start, int length, ref int totalCount, string ax = "", string collectionId = "") {
+            var datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string sqlStr = @"SELECT    [Extent1].[material_id] AS [MaterialId] ,
+                    [Extent1].[material_des] AS [MaterialDes] ,
+                    [Extent1].[vendor_material_id] AS [VendorMaterialId] ,
+                    [Extent1].[icd] AS [Icd] ,
+                    [Extent1].[brand_id] AS [BrandId] ,
+                    [Extent1].[brand_name] AS [BrandName] ,
+                    [Extent1].[material_name] AS [MaterialName] ,
+                    [Extent1].[material_name_e] AS [MaterialNameE] ,
+                    [Extent1].[class_id] AS [ClassId] ,
+                    [Extent1].[ClassIdCodeText] AS [ClassIdCodeText] ,
+                    [Extent1].[collection_id] AS [CollectionId] ,
+                    [Extent1].[CollectionIdCodeText] AS [CollectionIdCodeText] ,
+                    [Extent1].[CategoryIdCodeText] AS [CategoryIdCodeText] ,
+                    [Extent1].[texture_id] AS [TextureId] ,
+                    [Extent1].[TextureIdCodeText] AS [TextureIdCodeText] ,
+                    [Extent1].[CycleIdCodeText] AS [CycleIdCodeText] ,
+                    [Extent1].[ColorClassifyIdCodeText] AS [ColorClassifyIdCodeText] ,
+                    [Extent1].[water_percent] AS [WaterPercent] ,
+                    [Extent1].[ji_hu] AS [JiHu] ,
+                    [Extent1].[diameter] AS [Diameter] ,
+                    [Extent1].[center_ply] AS [CenterPly] ,
+                    [Extent1].[DiameterIdCodeText] AS [DiameterIdCodeText] ,
+                    [Extent1].[package_number] AS [PackageNumber] ,
+                    [Extent1].[degree_s] AS [DegreeS] ,
+                    [Extent1].[degree_c] AS [DegreeC] ,
+                    [Extent1].[ax] AS [Ax] ,
+                    [Extent1].[UnitName] AS [UnitName] ,
+                    [Extent1].[producing_area] AS [ProducingArea] ,
+                    [Extent1].[is_valid] AS [IsValid] ,
+                    [Extent1].[purchase_price] AS [CostPrice] ,
+                     CASE WHEN ( d.[vendor_id] IS NULL )
+                         THEN [Extent1].[vendor_id]
+                         ELSE d.[vendor_id]
+                    END AS [VendorId] ,  --  [Extent1].[vendor_id] AS [VendorId] ,
+                    [Extent1].[min_degree_s_decimal] AS [MinDegreeSDecimal] ,
+                    [Extent1].[max_degree_s_decimal] AS [MaxDegreeSDecimal] ,
+                    [Extent1].[min_degree_c_decimal] AS [MinDegreeCDecimal] ,
+                    [Extent1].[max_degree_c_decimal] AS [MaxDegreeCDecimal] ,
+                    [Extent1].[is_lower_shelf] AS [IsLowerShelf] ,
+                    [Extent1].[is_custom_movie] AS [IsCustomMovie] ,
+                    [Extent1].[is_valid_vendor] AS [IsValidVendor] ,
+                    CASE WHEN ( [Extent1].[sale_price] IS NULL )
+                         THEN CAST(0 AS DECIMAL(18))
+                         ELSE [Extent1].[sale_price]
+                    END AS [SalePrice]
+          FROM      [dbo].[vi_gmt_cmaterial_info] AS [Extent1] WITH ( NOLOCK )
+                    INNER JOIN [dbo].[tb_material_filter_set] AS [Extent2]
+                    WITH ( NOLOCK ) ON [Extent1].[material_type] = [Extent2].[material_type]
+                                       AND [Extent1].[brand_id] = [Extent2].[brand_id]
+
+	 INNER JOIN dbo.tb_gmt_vendor_material_bc c WITH ( NOLOCK ) ON [Extent1].collection_id=c.collection_id AND [Extent1].material_type=c.Material_type AND [Extent1].vendor_id=c.vendor_id
+					 LEFT JOIN	 (SELECT * FROM tb_jk_head_brand WHERE is_valid=1 ) d ON [Extent1].material_type=d.Material_type AND [Extent1].brand_id=d.Brand_id
+          WHERE     ( '" + datetime + @"' > [Extent1].[begin_date] ) AND ( '" + datetime + @"' < [Extent1].[End_date] ) and ('" + datetime + @"' > c.[begin_date] ) AND ('" + datetime + @"' < c.[End_date] )  ";
+            if (!string.IsNullOrEmpty(vendorId)) {
+                sqlStr += " AND [Extent1].vendor_id='" + vendorId + "' ";
+            }
+            if (!string.IsNullOrEmpty(materialId)) {
+                sqlStr += " AND [Extent1].material_id='" + materialId + "' ";
+            }
+            if (!string.IsNullOrEmpty(materialDes)) {
+                sqlStr += " AND [Extent1].material_des like '%" + materialDes + "%' ";
+            }
+            if (!string.IsNullOrEmpty(vendorMaterialId)) {
+                sqlStr += " AND [Extent1].vendor_material_id like '%" + vendorMaterialId + "%' ";
+            }
+            if (!string.IsNullOrEmpty(icd)) {
+                sqlStr += " AND [Extent1].icd like '%" + icd + "%' ";
+            }
+            if (!string.IsNullOrEmpty(materialName)) {
+                sqlStr += " AND [Extent1].material_name like '%" + materialName + "%' ";
+            }
+            if (!string.IsNullOrEmpty(brand)) {
+                sqlStr += " AND ([Extent1].brand_id like '%" + brand + "%' OR [Extent1].brand_name like '%" + brand + "%') ";
+            }
+            if (!string.IsNullOrEmpty(classId)) {
+                sqlStr += " AND [Extent1].class_id='" + classId + "' ";
+            }
+            if (!string.IsNullOrEmpty(texture)) {
+                sqlStr += " AND [Extent1].texture_id='" + texture + "' ";
+            }
+            if (!string.IsNullOrEmpty(degreeS)) {
+                try {
+                    var deg = decimal.Parse(degreeS);
+                    sqlStr += " AND ([Extent1].max_degree_s_decimal>=" + deg.ToString() + " AND [Extent1].min_degree_s_decimal<=" + deg.ToString() + ") ";
+                }
+                catch (Exception) { }
+            }
+            if (!string.IsNullOrEmpty(degreeC)) {
+                try {
+                    var deg = decimal.Parse(degreeC);
+                    sqlStr += " AND ([Extent1].max_degree_c_decimal>=" + deg.ToString() + " AND [Extent1].min_degree_c_decimal<=" + deg.ToString() + ") ";
+                }
+                catch (Exception) { }
+            }
+            if (!string.IsNullOrEmpty(ax)) {
+                sqlStr += " AND [Extent1].varchar='" + ax + "' ";
+            }
+            if (!string.IsNullOrEmpty(collectionId)) {
+                sqlStr += " AND [Extent1].collection_id='" + collectionId + "' ";
+            }
+
+            string strSqlCount = "SELECT COUNT(1) FROM (" + sqlStr + ") t";
+            string sql = @"SELECT  [Project1].* FROM (" + sqlStr + @") AS [Project1] ORDER BY [Project1].[MaterialId] ASC 
+                OFFSET " + start + " ROWS FETCH NEXT " + length + " ROWS ONLY; ";
+
+            totalCount = _SCMDbContext.Database.SqlQuery<int>(strSqlCount).FirstOrDefault<int>();
+            return _SCMDbContext.Database.SqlQuery<CMaterialQueryModel>(sql).AsQueryable();
+        }
