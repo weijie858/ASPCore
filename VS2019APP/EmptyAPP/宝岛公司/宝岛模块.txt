@@ -1,0 +1,9 @@
+﻿/**********************************20191203*********************************************************/
+镜客商品维护A
+tb_material_maintenance_apply_head
+tb_material_maintenance_apply_detail_add
+
+//假设审批是最后一级，则插入商品到 ： 采购组供应商商品表，销售组售价表，采购组批发价表
+采购组供应商商品表   tb_purchase_vendor_material  tb_purchase_vendor_price_bc（B、C类）
+tb_strategy_price 价格策略
+
