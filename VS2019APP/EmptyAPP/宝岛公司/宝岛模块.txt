@@ -7,7 +7,7 @@ tb_purchase_wholesale_price  ---采购组批发价表
 tb_sale_dep_sale_price   ---销售组售价表
 
 //假设审批是最后一级，则插入商品到 ： 采购组供应商商品表，销售组售价表，采购组批发价表
-采购组供应商商品表   tb_purchase_vendor_material  tb_purchase_vendor_price_bc（B、C类）
+采购组供应商商品表   tb_purchase_vendor_material  tb_purchase_vendor_price_bc （B、C类）
 tb_strategy_price 价格策略
 
 tb_material_state
@@ -28,10 +28,25 @@ CommonApplyDetailType.ThirdGroupType
 
 
 
+---------------------------------------------------------------------------------------------SCM-----------------------------------------------------------------------
+商品管理>>商品维护申请>>商品维护申请-A类---------------------------------scm
+vi_scm_area_material    地区商品档
+采购组供应商商品档， tb_purchase_vendor_material     tb_purchase_vendor_price_bc
+采购组批发价格档，tb_purchase_wholesale_price_bc  tb_purchase_wholesale_price
+销售组销售价格档 tb_sale_dep_sale_price   tb_sale_dep_sale_price_bc
+
 
 
 
 供应商星创商品关系表 tb_gmt_vendor_material
 
 
-tb_sys_organization  tb_sys_user tb_sys_user_power  tb_sys_user_role_org
+tb_material_maintenance_apply_head  
+
+---------------------------------------------------------------
+    using (var t = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
+            {
+                return _dao.getCompanyVendorTax(CompanyType, CompanyId, VendorId);
+            }
+
+

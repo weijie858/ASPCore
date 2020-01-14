@@ -6,7 +6,17 @@ namespace EFGetStarted
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            using (var context = new TestDbContext())
+            {
+                var role = new Role
+                {
+                    RoleName = "管理员"
+                };
+
+                context.Roles.Add(role);
+
+                context.SaveChanges();
+            }
         }
     }
 }
