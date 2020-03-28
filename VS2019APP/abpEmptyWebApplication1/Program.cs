@@ -21,6 +21,10 @@ namespace abpEmptyWebApplication1
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                    .UseAutofac(); //Add this line
+
+
+
     }
 }
