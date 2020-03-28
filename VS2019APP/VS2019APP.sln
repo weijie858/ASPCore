@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmptyAPP", "EmptyAPP\EmptyA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFGetStarted", "EFGetStarted\EFGetStarted.csproj", "{8FD4B8F8-A8B9-434D-905E-A9F7EFE4C051}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbpConsoleApp1", "AbpConsoleApp1\AbpConsoleApp1.csproj", "{C35C6E56-C4FB-4077-B530-5FA8C73ACD1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8FD4B8F8-A8B9-434D-905E-A9F7EFE4C051}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FD4B8F8-A8B9-434D-905E-A9F7EFE4C051}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FD4B8F8-A8B9-434D-905E-A9F7EFE4C051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C35C6E56-C4FB-4077-B530-5FA8C73ACD1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C35C6E56-C4FB-4077-B530-5FA8C73ACD1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C35C6E56-C4FB-4077-B530-5FA8C73ACD1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C35C6E56-C4FB-4077-B530-5FA8C73ACD1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
