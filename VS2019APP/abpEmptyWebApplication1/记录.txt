@@ -1,1 +1,2 @@
 ﻿1. Install-Package Volo.Abp.AspNetCore.Mvc
+2. Install-Package Volo.Abp.Autofac
